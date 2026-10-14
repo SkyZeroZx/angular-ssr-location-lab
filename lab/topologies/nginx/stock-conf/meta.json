@@ -1,0 +1,9 @@
+{
+  "description": "Official nginx image with its shipped nginx.conf (worker_processes auto) on two CPUs, like a 2 vCPU VPS, so two workers, and a two-peer upstream in conf.d/default.conf.",
+  "proxy": "nginx",
+  "proxyVersion": "1.27.5",
+  "producer": "A1",
+  "port": 18110,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

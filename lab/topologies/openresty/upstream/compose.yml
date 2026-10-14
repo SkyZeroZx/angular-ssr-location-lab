@@ -1,0 +1,23 @@
+# OpenResty with its shipped nginx.conf and a plain upstream block in
+# conf.d/default.conf, no Lua balancer.
+services:
+  app-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b"
+    expose: ["4000"]
+
+  app-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b"
+    expose: ["4000"]
+
+  openresty:
+    image: openresty/openresty:alpine
+    depends_on: [app-a, app-b]
+    ports: ["18112:8080"]
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro

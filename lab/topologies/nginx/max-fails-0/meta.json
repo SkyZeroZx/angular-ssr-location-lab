@@ -1,0 +1,9 @@
+{
+  "description": "Two nginx peers with max_fails=0. The oversized request still gets 502, but no peer is disabled.",
+  "proxy": "nginx",
+  "proxyVersion": "1.31.2",
+  "producer": "A1",
+  "port": 18086,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

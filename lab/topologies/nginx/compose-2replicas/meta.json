@@ -1,0 +1,9 @@
+{
+  "description": "Docker Compose with two replicas of one service and nginx proxy_pass to the service name, resolved through Docker DNS.",
+  "proxy": "nginx",
+  "proxyVersion": "1.31.2",
+  "producer": "A1",
+  "port": 18080,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

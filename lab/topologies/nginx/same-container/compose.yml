@@ -1,0 +1,22 @@
+# nginx and the Node server in one container, proxy_pass http://localhost:4000.
+# nginx is installed with apk when the container starts, so its version
+# follows the Alpine repository instead of a pinned image.
+services:
+  app-with-nginx:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-with-nginx"
+    ports:
+      - "18082:8080"
+    volumes:
+      - ./nginx.conf:/poc/nginx.conf:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        apk add --no-cache nginx
+        # Node listens on :: (dual stack), so both 127.0.0.1 and ::1 answer.
+        node /app/dist/app/server/server.mjs &
+        until wget -q -O /dev/null http://127.0.0.1:4000/home; do sleep 1; done
+        exec nginx -c /poc/nginx.conf

@@ -1,0 +1,40 @@
+# OpenResty with a Lua balancer in front of two peers. The peer addresses are
+# pinned because ngx.balancer only accepts IP literals.
+services:
+  app1:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app1,app2,10.191.91.11,10.191.91.12"
+    expose: ["4000"]
+    networks:
+      lab:
+        ipv4_address: 10.191.91.11
+
+  app2:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app1,app2,10.191.91.11,10.191.91.12"
+    expose: ["4000"]
+    networks:
+      lab:
+        ipv4_address: 10.191.91.12
+
+  openresty:
+    image: openresty/openresty:alpine
+    depends_on: [app1, app2]
+    ports: ["18091:8080"]
+    volumes:
+      - ./nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+    networks:
+      lab:
+        ipv4_address: 10.191.91.3
+
+networks:
+  lab:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.191.91.0/24
+          gateway: 10.191.91.1

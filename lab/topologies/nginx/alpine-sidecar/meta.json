@@ -1,0 +1,9 @@
+{
+  "description": "nginx:alpine sidecar sharing the app's network namespace and proxying to http://localhost:4000, the shape of a Kubernetes sidecar or an ECS task-local proxy.",
+  "proxy": "nginx",
+  "proxyVersion": "1.29.3",
+  "producer": "A2",
+  "port": 18083,
+  "expect": "outage",
+  "attack": { "path": "/admin?q={payload}", "fill": "\"", "count": 1000 }
+}

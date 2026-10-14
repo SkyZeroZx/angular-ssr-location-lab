@@ -1,0 +1,9 @@
+{
+  "description": "nginx with a primary and a backup peer. The backup is promoted when the primary is ejected and then ejected by the next oversized response, so it does not protect.",
+  "proxy": "nginx",
+  "proxyVersion": "1.31.2",
+  "producer": "A1",
+  "port": 18084,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

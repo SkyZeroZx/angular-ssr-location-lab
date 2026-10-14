@@ -1,0 +1,9 @@
+{
+  "description": "nginx and the Node server in one container with proxy_pass http://localhost:4000. localhost resolves to two addresses, so one process is counted as two peers.",
+  "proxy": "nginx",
+  "proxyVersion": "1.30.4 (apk)",
+  "producer": "A2",
+  "port": 18082,
+  "expect": "outage",
+  "attack": { "path": "/admin?q={payload}", "fill": "\"", "count": 1000 }
+}

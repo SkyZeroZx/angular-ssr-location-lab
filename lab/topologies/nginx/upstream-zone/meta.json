@@ -1,0 +1,9 @@
+{
+  "description": "nginx with worker_processes auto and a shared upstream zone over two peers.",
+  "proxy": "nginx",
+  "proxyVersion": "1.27.5",
+  "producer": "A1",
+  "port": 18111,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

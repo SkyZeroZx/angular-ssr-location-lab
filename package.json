@@ -5,7 +5,11 @@
   "description": "Docker lab for the unbounded request-derived Location header in @angular/ssr and what reverse proxies do with it.",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "repro:producers": "node scripts/probe-producers.mjs"
+    "repro": "npm run build && npm run repro:producers && npm run repro:topologies && npm run repro:controls",
+    "repro:producers": "node scripts/probe-producers.mjs",
+    "repro:topologies": "node scripts/run-topology.mjs --all",
+    "repro:controls": "node scripts/run-topology.mjs --all --control",
+    "clean": "node scripts/clean.mjs"
   },
   "engines": {
     "node": ">=20"

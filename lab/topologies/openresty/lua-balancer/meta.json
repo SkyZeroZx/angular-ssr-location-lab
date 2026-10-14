@@ -1,0 +1,9 @@
+{
+  "description": "OpenResty picking the peer in balancer_by_lua_block, like ingress-nginx. The oversized request gets 502, but Lua-selected peers are never disabled.",
+  "proxy": "openresty",
+  "proxyVersion": "1.31.1.1",
+  "producer": "A1",
+  "port": 18091,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

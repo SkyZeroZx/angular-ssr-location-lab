@@ -1,0 +1,22 @@
+# Two separate app services, so only the second one can be marked backup.
+services:
+  app-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b,ssr"
+    expose: ["4000"]
+
+  app-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b,ssr"
+    expose: ["4000"]
+
+  nginx:
+    image: macbre/nginx-http3:1.31.2
+    depends_on: [app-a, app-b]
+    ports: ["18084:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro

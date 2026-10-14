@@ -1,0 +1,22 @@
+# Two peers behind nginx with passive health checks turned off.
+services:
+  app-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b"
+    expose: ["4000"]
+
+  app-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b"
+    expose: ["4000"]
+
+  nginx:
+    image: macbre/nginx-http3:1.31.2
+    depends_on: [app-a, app-b]
+    ports: ["18086:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro

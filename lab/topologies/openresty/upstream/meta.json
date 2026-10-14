@@ -1,0 +1,9 @@
+{
+  "description": "OpenResty with its shipped nginx.conf and a plain two-peer upstream block, without a Lua balancer.",
+  "proxy": "openresty",
+  "proxyVersion": "1.31.1.1",
+  "producer": "A1",
+  "port": 18112,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

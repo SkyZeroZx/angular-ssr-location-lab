@@ -1,0 +1,9 @@
+{
+  "description": "Two stock nginx peers in front of an app whose only routes are '', 'home' and '**'. No guard, resolver, redirectTo or :param route.",
+  "proxy": "nginx",
+  "proxyVersion": "1.27.5",
+  "producer": "A1",
+  "port": 18092,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

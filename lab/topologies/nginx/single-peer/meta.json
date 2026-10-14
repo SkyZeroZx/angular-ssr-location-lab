@@ -1,0 +1,9 @@
+{
+  "description": "explicit-2peers with a single server in the upstream. nginx never disables the only peer, so only the oversized request gets 502.",
+  "proxy": "nginx",
+  "proxyVersion": "1.27.5",
+  "producer": "A1",
+  "port": 18085,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

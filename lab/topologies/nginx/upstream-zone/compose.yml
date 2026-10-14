@@ -1,0 +1,23 @@
+# nginx with worker_processes auto and an upstream zone, so the failure counts
+# are shared by every worker.
+services:
+  app-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b"
+    expose: ["4000"]
+
+  app-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b"
+    expose: ["4000"]
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on: [app-a, app-b]
+    ports: ["18111:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro

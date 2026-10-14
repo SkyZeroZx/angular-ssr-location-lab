@@ -1,0 +1,23 @@
+# Same stack as explicit-2peers. Only the upstream in nginx.conf differs.
+services:
+  app-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b,ssr_backend"
+    expose: ["4000"]
+
+  # Not in the upstream, kept running so both stacks have the same containers.
+  app-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b,ssr_backend"
+    expose: ["4000"]
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on: [app-a, app-b]
+    ports: ["18085:8080"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro

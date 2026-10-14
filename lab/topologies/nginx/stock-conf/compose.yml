@@ -1,0 +1,27 @@
+# The official nginx image with its own nginx.conf left as it ships
+# (worker_processes auto, error_log notice). Only the server block in
+# conf.d/default.conf is replaced, which is how the image is meant to be used.
+# nginx is limited to two CPUs, like a 2 vCPU VPS, so `auto` starts two
+# workers instead of one per CPU of the Docker host.
+services:
+  app-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b"
+    expose: ["4000"]
+
+  app-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app-a,app-b"
+    expose: ["4000"]
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on: [app-a, app-b]
+    cpuset: "0,1"
+    ports: ["18110:8080"]
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
