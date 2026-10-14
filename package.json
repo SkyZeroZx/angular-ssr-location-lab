@@ -4,7 +4,8 @@
   "private": true,
   "description": "Docker lab for the unbounded request-derived Location header in @angular/ssr and what reverse proxies do with it.",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "repro:producers": "node scripts/probe-producers.mjs"
   },
   "engines": {
     "node": ">=20"
