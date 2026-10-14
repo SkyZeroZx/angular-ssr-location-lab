@@ -1,0 +1,12 @@
+# Measurement output, written by the scripts. Regenerate it with `npm run repro`.
+ssr-redirect-evidence/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
