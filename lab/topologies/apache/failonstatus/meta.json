@@ -1,0 +1,9 @@
+{
+  "description": "Apache httpd 2.4 with failonstatus=502. Both members are put in error state by Apache's own header rejection, and forcerecovery (On by default) resets them. 2,800 quotes so the Location passes Apache's 8,192 B limit.",
+  "proxy": "apache",
+  "proxyVersion": "2.4.69",
+  "producer": "A1",
+  "port": 18096,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 2800 }
+}

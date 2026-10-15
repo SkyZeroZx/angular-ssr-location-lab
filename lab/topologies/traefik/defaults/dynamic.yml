@@ -1,0 +1,16 @@
+# Two servers, round robin. Traefik only removes a server through an active
+# healthCheck, which is not configured here. It has no passive ejection.
+http:
+  routers:
+    poc:
+      rule: "PathPrefix(`/`)"
+      entryPoints: [web]
+      service: ssr
+
+  services:
+    ssr:
+      loadBalancer:
+        servers:
+          - url: "http://ssr-a:4000"
+          - url: "http://ssr-b:4000"
+        passHostHeader: true

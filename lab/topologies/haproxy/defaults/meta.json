@@ -1,0 +1,9 @@
+{
+  "description": "HAProxy 3.0 over two peers, defaults. The 16 KB buffer relays the Location and nothing marks a server down on a bad response.",
+  "proxy": "haproxy",
+  "proxyVersion": "3.0.29",
+  "producer": "A1",
+  "port": 18088,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

@@ -1,0 +1,22 @@
+# Caddy 2 in front of two peers.
+services:
+  ssr-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,caddy"
+    expose: ["4000"]
+
+  ssr-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,caddy"
+    expose: ["4000"]
+
+  caddy:
+    image: caddy:2-alpine
+    depends_on: [ssr-a, ssr-b]
+    ports: ["18090:8080"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro

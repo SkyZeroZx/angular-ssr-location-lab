@@ -1,0 +1,28 @@
+# caddy/passive with the upstream header limit at 4KB, nginx's default.
+#
+# The Location no longer fits, Caddy answers 502, counts it against the peer
+# and takes both peers out, the same result as nginx. This also shows the
+# passive checks in caddy/passive are active.
+{
+	admin off
+	auto_https off
+}
+
+:8080 {
+	log {
+		output stdout
+		format console
+	}
+
+	reverse_proxy ssr-a:4000 ssr-b:4000 {
+		lb_policy round_robin
+
+		fail_duration 10s
+		max_fails 1
+		unhealthy_status 5xx
+
+		transport http {
+			max_response_header 4KB
+		}
+	}
+}

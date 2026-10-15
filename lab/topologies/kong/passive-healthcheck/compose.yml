@@ -1,0 +1,41 @@
+# Kong Gateway 3.7 (DB-less) in front of two peers. Kong runs on OpenResty,
+# so the upstream header buffer is nginx's 4k proxy_buffer_size (Kong does not
+# set it), and the passive health checker is Kong's own (kong.yml).
+#
+# With KONG_NGINX_HTTP_PROXY_BUFFER_SIZE=32k and KONG_NGINX_HTTP_PROXY_BUFFERS
+# ="8 32k" (nginx refuses to start without the second one) the Location is
+# relayed and legitimate traffic stays at 100%.
+services:
+  app1:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app1,app2,kong,ssr-upstream"
+    expose: ["4000"]
+
+  app2:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app1,app2,kong,ssr-upstream"
+    expose: ["4000"]
+
+  kong:
+    image: kong:3.7
+    depends_on: [app1, app2]
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yml
+      KONG_PROXY_LISTEN: "0.0.0.0:8000"
+      # Not published. Target health can be read with `docker compose exec`.
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_LOG_LEVEL: info
+      # Health state is per worker, so one worker, as in the nginx topologies.
+      KONG_NGINX_WORKER_PROCESSES: "1"
+    ports: ["18098:8000"]
+    volumes:
+      - ./kong.yml:/kong/declarative/kong.yml:ro

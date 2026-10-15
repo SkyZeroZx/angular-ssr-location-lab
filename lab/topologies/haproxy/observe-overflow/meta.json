@@ -1,0 +1,9 @@
+{
+  "description": "HAProxy 3.0 with observe layer7 at the default 16 KB buffer. 6,000 quotes give a ~18 KB Location, HAProxy rejects it and marks both servers down.",
+  "proxy": "haproxy",
+  "proxyVersion": "3.0.29",
+  "producer": "A1",
+  "port": 18199,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 6000 }
+}

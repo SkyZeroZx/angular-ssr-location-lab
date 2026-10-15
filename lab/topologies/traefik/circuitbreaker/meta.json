@@ -1,0 +1,9 @@
+{
+  "description": "Traefik 3.1 with a circuitBreaker middleware (network error ratio or 5xx ratio above 10%). The relayed 302 trips neither.",
+  "proxy": "traefik",
+  "proxyVersion": "3.1.7",
+  "producer": "A1",
+  "port": 18101,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Apache httpd 2.4 with mod_proxy_balancer over two peers, at its defaults. The 8,192 B responsefieldsize relays the 4,208 B Location, and without failonstatus nothing is ever ejected.",
+  "proxy": "apache",
+  "proxyVersion": "2.4.69",
+  "producer": "A1",
+  "port": 18095,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

@@ -1,0 +1,28 @@
+# traefik/defaults with a circuitBreaker middleware on the router.
+#
+# The breaker judges the whole service, not each server, and opens on network
+# errors (including a response head Traefik cannot parse) or on 5xx. A 302
+# with a 4,208 B Location is neither, so it never opens.
+http:
+  routers:
+    poc:
+      rule: "PathPrefix(`/`)"
+      entryPoints: [web]
+      service: ssr
+      middlewares: [cb]
+
+  middlewares:
+    cb:
+      circuitBreaker:
+        expression: "NetworkErrorRatio() > 0.10 || ResponseCodeRatio(500, 600, 0, 600) > 0.10"
+        checkPeriod: 1s
+        fallbackDuration: 10s
+        recoveryDuration: 5s
+
+  services:
+    ssr:
+      loadBalancer:
+        servers:
+          - url: "http://ssr-a:4000"
+          - url: "http://ssr-b:4000"
+        passHostHeader: true

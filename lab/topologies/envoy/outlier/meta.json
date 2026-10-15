@@ -1,0 +1,9 @@
+{
+  "description": "Envoy 1.31 with outlier detection set to nginx's numbers. The Location fits, so nothing is ejected.",
+  "proxy": "envoy",
+  "proxyVersion": "1.31.10",
+  "producer": "A1",
+  "port": 18094,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

@@ -1,0 +1,23 @@
+# Envoy at its defaults in front of two peers.
+services:
+  ssr-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,envoy"
+    expose: ["4000"]
+
+  ssr-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,envoy"
+    expose: ["4000"]
+
+  envoy:
+    image: envoyproxy/envoy:v1.31-latest
+    depends_on: [ssr-a, ssr-b]
+    ports: ["18093:8080"]
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    command: ["-c", "/etc/envoy/envoy.yaml", "-l", "info"]

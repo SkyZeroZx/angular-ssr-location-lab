@@ -1,0 +1,9 @@
+{
+  "description": "HAProxy 3.0 with observe layer7 / error-limit 1 / on-error mark-down. The 4,208 B Location fits, so no error is observed.",
+  "proxy": "haproxy",
+  "proxyVersion": "3.0.29",
+  "producer": "A1",
+  "port": 18099,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

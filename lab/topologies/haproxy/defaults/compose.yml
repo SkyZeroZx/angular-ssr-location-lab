@@ -1,0 +1,22 @@
+# HAProxy 3.0 in front of two peers.
+services:
+  app1:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app1,app2,haproxy"
+    expose: ["4000"]
+
+  app2:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,app1,app2,haproxy"
+    expose: ["4000"]
+
+  haproxy:
+    image: haproxy:3.0-alpine
+    depends_on: [app1, app2]
+    ports: ["18088:8080"]
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro

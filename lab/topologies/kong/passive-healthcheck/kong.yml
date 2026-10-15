@@ -1,0 +1,62 @@
+# Kong DB-less config: one upstream with two targets and passive health checks.
+#
+# Kong's default unhealthy http_statuses is [429, 500, 503]. 502 is added
+# here, so the 502 Kong produces when the Location does not fit counts as a
+# failure. With Kong's default list the oversized request still gets 502 but
+# no target is marked unhealthy and legitimate traffic stays at 100%.
+#
+# Active checks stay off (interval 0, Kong's default). A target marked
+# unhealthy by passive checks only comes back through traffic, and none is
+# sent to it, so in these runs the upstream did not recover after the attack.
+_format_version: "3.0"
+_transform: true
+
+upstreams:
+  - name: ssr-upstream
+    algorithm: round-robin
+    healthchecks:
+      active:
+        type: http
+        healthy:
+          interval: 0
+          successes: 0
+        unhealthy:
+          interval: 0
+          http_failures: 0
+          tcp_failures: 0
+          timeouts: 0
+      passive:
+        type: http
+        healthy:
+          successes: 1
+          http_statuses: [200, 201, 202, 203, 204, 205, 206, 207, 208, 226,
+                          300, 301, 302, 303, 304, 305, 306, 307, 308]
+        unhealthy:
+          http_failures: 1
+          tcp_failures: 1
+          timeouts: 1
+          http_statuses: [429, 500, 502, 503, 504]
+    targets:
+      - target: app1:4000
+        weight: 100
+      - target: app2:4000
+        weight: 100
+
+services:
+  - name: ssr-service
+    # The upstream name as host puts the balancer and its health checker in
+    # the request path.
+    host: ssr-upstream
+    port: 80
+    protocol: http
+    connect_timeout: 5000
+    read_timeout: 30000
+    write_timeout: 30000
+    # One attempt per request, so each failure is charged to one target.
+    retries: 0
+    routes:
+      - name: ssr-route
+        paths:
+          - /
+        strip_path: false
+        preserve_host: true

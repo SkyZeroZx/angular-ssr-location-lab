@@ -1,0 +1,41 @@
+# Varnish 7.5 in front of two peers, at its defaults.
+#
+# http_resp_hdr_len (8192 by default) limits each header line, "location: "
+# included. 2,724 quotes give an 8,180 B Location that is relayed, 2,725 give
+# 8,183 B and a 503.
+services:
+  ssr-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,varnish"
+    expose: ["4000"]
+
+  ssr-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,varnish"
+    expose: ["4000"]
+
+  varnish:
+    image: varnish:7.5
+    depends_on: [ssr-a, ssr-b]
+    ports: ["18097:80"]
+    # -n fixes the shared memory log directory so varnishlog can find it.
+    command: ["-n", "poc"]
+    volumes:
+      - ./default.vcl:/etc/varnish/default.vcl:ro
+      - vsm:/var/lib/varnish
+
+  # varnishd only logs startup to stdout. This streams the request log.
+  varnishlog:
+    image: varnish:7.5
+    depends_on: [varnish]
+    volumes:
+      - vsm:/var/lib/varnish
+    entrypoint: ["/bin/sh", "-c",
+      "sleep 3; until varnishlog -n poc -g raw -i VCL_Log,FetchError,Backend_health,BackendOpen,BackendClose,RespStatus,BerespStatus,Error,LostHeader,HttpGarbage,BogoHeader; do sleep 1; done"]
+
+volumes:
+  vsm:

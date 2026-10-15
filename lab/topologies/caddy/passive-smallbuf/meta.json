@@ -1,0 +1,9 @@
+{
+  "description": "Caddy 2 with passive health checks and max_response_header 4KB. The Location no longer fits and Caddy takes both peers out, like nginx.",
+  "proxy": "caddy",
+  "proxyVersion": "2.11.7",
+  "producer": "A1",
+  "port": 18200,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

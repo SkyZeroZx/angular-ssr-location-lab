@@ -1,0 +1,9 @@
+{
+  "description": "Caddy 2 round-robin over two peers, defaults. The 10 MB header limit relays the Location and passive health checks are off.",
+  "proxy": "caddy",
+  "proxyVersion": "2.11.7",
+  "producer": "A1",
+  "port": 18090,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

@@ -1,0 +1,20 @@
+# Same as traefik/defaults, with DEBUG logging: at INFO Traefik does not
+# log circuit breaker state changes.
+
+entryPoints:
+  web:
+    address: ":8080"
+
+providers:
+  file:
+    filename: /etc/traefik/dynamic.yml
+    watch: true
+
+api:
+  dashboard: false
+
+log:
+  level: DEBUG
+
+accessLog:
+  format: common

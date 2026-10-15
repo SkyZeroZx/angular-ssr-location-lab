@@ -1,0 +1,26 @@
+# caddy/defaults plus passive health checks with nginx's numbers.
+#
+# In a Caddyfile these are flat reverse_proxy subdirectives; a nested
+# health_checks { passive { ... } } block is rejected by caddy validate.
+# A non-zero fail_duration is what turns them on.
+#
+# Not affected: the Location fits in the 10 MB limit, so no 5xx is counted.
+{
+	admin off
+	auto_https off
+}
+
+:8080 {
+	log {
+		output stdout
+		format console
+	}
+
+	reverse_proxy ssr-a:4000 ssr-b:4000 {
+		lb_policy round_robin
+
+		fail_duration 10s
+		max_fails 1
+		unhealthy_status 5xx
+	}
+}

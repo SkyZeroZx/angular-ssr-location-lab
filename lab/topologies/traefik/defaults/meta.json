@@ -1,0 +1,9 @@
+{
+  "description": "Traefik 3.1 round robin over two peers. The 10 MB header limit relays the Location and there is no passive ejection.",
+  "proxy": "traefik",
+  "proxyVersion": "3.1.7",
+  "producer": "A1",
+  "port": 18089,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

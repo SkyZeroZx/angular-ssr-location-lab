@@ -1,0 +1,36 @@
+# Varnish 7.5 at its defaults with vmod_saintmode in the VCL. 2,800 quotes give
+# an 8,408 B Location, past the default 8192 B header line limit.
+services:
+  ssr-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,varnish"
+    expose: ["4000"]
+
+  ssr-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,varnish"
+    expose: ["4000"]
+
+  varnish:
+    image: varnish:7.5
+    depends_on: [ssr-a, ssr-b]
+    ports: ["18297:80"]
+    command: ["-n", "poc"]
+    volumes:
+      - ./default.vcl:/etc/varnish/default.vcl:ro
+      - vsm:/var/lib/varnish
+
+  varnishlog:
+    image: varnish:7.5
+    depends_on: [varnish]
+    volumes:
+      - vsm:/var/lib/varnish
+    entrypoint: ["/bin/sh", "-c",
+      "sleep 3; until varnishlog -n poc -g raw -i VCL_Log,VCL_Error,FetchError,Backend_health,BackendOpen,BackendClose,RespStatus,BerespStatus,Error,LostHeader,HttpGarbage,BogoHeader; do sleep 1; done"]
+
+volumes:
+  vsm:

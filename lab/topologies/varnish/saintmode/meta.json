@@ -1,0 +1,9 @@
+{
+  "description": "Varnish 7.5 at its defaults plus vmod_saintmode with threshold 1. The oversized header fails before vcl_backend_response, the only place saintmode can act, so no backend is taken out.",
+  "proxy": "varnish",
+  "proxyVersion": "7.5.0",
+  "producer": "A1",
+  "port": 18297,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 2800 }
+}

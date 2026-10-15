@@ -1,0 +1,9 @@
+{
+  "description": "Varnish 7.5 with http_resp_hdr_len=4096. Varnish rejects the Location with 503 but never marks a backend sick.",
+  "proxy": "varnish",
+  "proxyVersion": "7.5.0",
+  "producer": "A1",
+  "port": 18197,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

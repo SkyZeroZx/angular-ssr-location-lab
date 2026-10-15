@@ -1,0 +1,9 @@
+{
+  "description": "Kong Gateway 3.7 DB-less over two targets, passive health checks with 502 in the unhealthy statuses. nginx's 4k buffer rejects the Location and Kong marks both targets unhealthy.",
+  "proxy": "kong",
+  "proxyVersion": "3.7.1",
+  "producer": "A1",
+  "port": 18098,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

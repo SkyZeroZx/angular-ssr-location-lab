@@ -1,0 +1,9 @@
+{
+  "description": "Envoy 1.31 at its defaults over two peers. The Location fits in Envoy's limit and outlier detection is off.",
+  "proxy": "envoy",
+  "proxyVersion": "1.31.10",
+  "producer": "A1",
+  "port": 18093,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

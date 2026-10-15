@@ -1,0 +1,23 @@
+# Traefik 3.1 with a circuit breaker in front of two peers.
+services:
+  ssr-a:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,traefik"
+    expose: ["4000"]
+
+  ssr-b:
+    image: ssr-redirect-poc:full
+    environment:
+      PORT: "4000"
+      NG_ALLOWED_HOSTS: "localhost,127.0.0.1,ssr-a,ssr-b,traefik"
+    expose: ["4000"]
+
+  traefik:
+    image: traefik:v3.1
+    depends_on: [ssr-a, ssr-b]
+    ports: ["18101:8080"]
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic.yml:/etc/traefik/dynamic.yml:ro

@@ -1,0 +1,9 @@
+{
+  "description": "Envoy 1.31 with outlier detection and a Location larger than Envoy's ~80 KiB limit. Both peers are ejected, and requests are still served because of Envoy's default panic threshold (50%).",
+  "proxy": "envoy",
+  "proxyVersion": "1.31.10",
+  "producer": "A1",
+  "port": 18293,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 30000 }
+}

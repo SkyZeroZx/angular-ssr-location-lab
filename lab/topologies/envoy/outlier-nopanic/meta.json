@@ -1,0 +1,9 @@
+{
+  "description": "envoy/outlier-overflow with healthy_panic_threshold 0. Once both peers are ejected Envoy answers 503 to every request, like nginx's no live upstreams.",
+  "proxy": "envoy",
+  "proxyVersion": "1.31.10",
+  "producer": "A1",
+  "port": 18294,
+  "expect": "outage",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 30000 }
+}
