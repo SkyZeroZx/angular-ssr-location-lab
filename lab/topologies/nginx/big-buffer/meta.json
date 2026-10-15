@@ -1,0 +1,9 @@
+{
+  "description": "Two nginx peers with proxy_buffer_size 32k. The 3x producer fits, the 5x returnUrl guard does not from 7,000 B of request.",
+  "proxy": "nginx",
+  "proxyVersion": "1.31.2",
+  "producer": "A1",
+  "port": 18087,
+  "expect": "available",
+  "attack": { "path": "/home/(x)?q={payload}", "fill": "\"", "count": 1400 }
+}

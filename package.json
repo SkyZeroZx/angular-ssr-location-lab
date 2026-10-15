@@ -9,6 +9,7 @@
     "repro:producers": "node scripts/probe-producers.mjs",
     "repro:topologies": "node scripts/run-topology.mjs --all",
     "repro:controls": "node scripts/run-topology.mjs --all --control",
+    "threshold": "node scripts/threshold.mjs",
     "clean": "node scripts/clean.mjs"
   },
   "engines": {
